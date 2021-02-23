@@ -16,9 +16,13 @@ public class TerrorAuto extends SequentialCommandGroup {
    */
   public TerrorAuto(Drivetrain drivetrain) {
     addCommands(
-        new DriveDistance(-0.5, 10, drivetrain),
-        new TurnDegrees(-0.5, 180, drivetrain),
-        new DriveDistance(-0.5, 10, drivetrain),
-        new TurnDegrees(0.5, 180, drivetrain));
+        new DriveArcade(-0.8, -0.3, 12.5, drivetrain),
+        new DriveArcade(-0.5, -0.5, 4, drivetrain),
+        new DriveArcade(-0.8, -0.3, 8, drivetrain),
+        new DriveArcade(-0.5, -0.7, 3, drivetrain),
+        new DriveArcade(-0.8, -0.5, 2.5, drivetrain),
+        new DriveArcade(-0.8, -0.4, 12, drivetrain),
+        new DriveArcade(-0.8, 0.5, 9, drivetrain)
+    );
   }
 }
