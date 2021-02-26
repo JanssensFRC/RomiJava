@@ -23,7 +23,6 @@ public class PosTrack extends CommandBase {
     private double absAng;
     private final double wheelDist = 2.75;
     private final Drivetrain m_drive;
-    private final Math;
     
     public PosTrack(Drivetrain drive) {
         m_drive = drive;
