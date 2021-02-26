@@ -15,14 +15,17 @@ public class TerrorAuto extends SequentialCommandGroup {
    * @param drivetrain The drivetrain subsystem on which this command will run
    */
   public TerrorAuto(Drivetrain drivetrain) {
+    final double kWheelDiameterInch = 2.75591; // 70 mm
+    final double wheelCircumference = kWheelDiameterInch*Math.PI;
     addCommands(
-        new DriveArcade(-0.8, -0.3, 12.5, drivetrain),
+      new TankDrivePID(0, wheelCircumference,drivetrain)
+        /*new DriveArcade(-0.8, -0.3, 12.5, drivetrain),
         new DriveArcade(-0.5, -0.5, 4, drivetrain),
         new DriveArcade(-0.8, -0.3, 8, drivetrain),
         new DriveArcade(-0.5, -0.7, 3, drivetrain),
         new DriveArcade(-0.8, -0.5, 2.5, drivetrain),
         new DriveArcade(-0.8, -0.4, 12, drivetrain),
-        new DriveArcade(-0.8, 0.5, 9, drivetrain)
+        new DriveArcade(-0.8, 0.5, 9, drivetrain)*/
     );
   }
 }
