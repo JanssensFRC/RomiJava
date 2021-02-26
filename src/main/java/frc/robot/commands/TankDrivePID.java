@@ -22,8 +22,8 @@ public class TankDrivePID extends CommandBase{
     public void initialize() {
         m_DT.arcadeDrive(0.0, 0.0);
         m_DT.resetEncoders();
-        lPID.setTolerance(0.5);
-        rPID.setTolerance(0.5);
+        lPID.setTolerance(0.125);
+        rPID.setTolerance(0.125);
     }
 
     public void execute(){
@@ -35,5 +35,9 @@ public class TankDrivePID extends CommandBase{
 
     public boolean isFinished(){
         return lPID.atSetpoint() && rPID.atSetpoint();
+    }
+
+    public void end(){
+        m_DT.stop();
     }
 }

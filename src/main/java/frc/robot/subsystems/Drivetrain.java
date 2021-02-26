@@ -8,7 +8,9 @@ import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import frc.controls.CubicSplineFollower;
 import frc.robot.sensors.RomiGyro;
+import frc.util.Tuple;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Drivetrain extends SubsystemBase {
@@ -33,6 +35,8 @@ public class Drivetrain extends SubsystemBase {
 
   // Set up the BuiltInAccelerometer
   private final BuiltInAccelerometer m_accelerometer = new BuiltInAccelerometer();
+  private CubicSplineFollower waypointNav;
+  private DrivetrainModel model;
 
   /** Creates a new Drivetrain. */
   public Drivetrain() {
@@ -40,7 +44,25 @@ public class Drivetrain extends SubsystemBase {
     m_leftEncoder.setDistancePerPulse((Math.PI * kWheelDiameterInch) / kCountsPerRevolution);
     m_rightEncoder.setDistancePerPulse((Math.PI * kWheelDiameterInch) / kCountsPerRevolution);
     resetEncoders();
+
+    model = new DrivetrainModel();
+		model.setPosition(0.0, 0.0, 0.0);
+
+		waypointNav = new CubicSplineFollower(model);
   }
+
+  private void driveWaypointNavigator() {
+		Tuple output = waypointNav.updatePursuit(model.center);
+		double leftSpeed = output.left;
+    double rightSpeed = output.right;
+    
+    setSpeed(leftSpeed, rightSpeed);
+  }
+  
+  private void setSpeed(double left, double right) {
+		m_leftMotor.set(left);
+		m_rightMotor.set(right);
+	}
 
   public void arcadeDrive(double xaxisSpeed, double zaxisRotate) {
     m_diffDrive.arcadeDrive(xaxisSpeed, zaxisRotate);
@@ -132,6 +154,10 @@ public class Drivetrain extends SubsystemBase {
   /** Reset the gyro. */
   public void resetGyro() {
     m_gyro.reset();
+  }
+
+  public void stop(){
+    m_diffDrive.tankDrive(0.0, 0.0);
   }
 
   @Override
