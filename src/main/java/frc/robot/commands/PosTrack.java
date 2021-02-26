@@ -21,9 +21,9 @@ public class PosTrack extends CommandBase {
     private double arcDist;
     private double linDist;
     private double absAng;
-    private final double wheelRad = 2.75;
+    private final double wheelDist = 2.75;
     private final Drivetrain m_drive;
-    private final Math math;
+    private final Math;
     
     public PosTrack(Drivetrain drive) {
         m_drive = drive;
@@ -62,8 +62,8 @@ public class PosTrack extends CommandBase {
             linDist = arcDist;
             absAng = intTheta;
         } else {
-            r = wheelRad * (Math.abs((dL + dR) / (dL - dR)) + Math.abs((dL + dR) / (dR - dL))) / 2; //solving for midpoint arc radius using system of arc length equations
-            dTheta = Math.copysign((dR - dL), (arcDist / r)); //calculate angle turned using arc length formula after solving for radius
+            r = wheelDist * (Math.abs((dL + dR) / (dL - dR)) + Math.abs((dL + dR) / (dR - dL))) / 2; //solving for midpoint arc radius using system of arc length equations
+            dTheta = Math.copySign((arcDist / r), (dR - dL)); //calculate angle turned using arc length formula after solving for radius
             theta += dTheta; //increment absolute angle by turn angle
             linDist = 2 * r * Math.cos(Math.abs(dTheta)); //using isoceles triangle base formula, calculate the linear distance between start and endpoint of the midpoint arc
             absAng = intTheta + (dTheta / 2); //absolute angle between start and endpoint of midpoint arc
