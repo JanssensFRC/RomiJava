@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.controls.CubicSplineFollower;
 import frc.robot.sensors.RomiGyro;
@@ -17,6 +18,7 @@ public class Drivetrain extends SubsystemBase {
   private static final double kCountsPerRevolution = 1440.0;
   private static final double kWheelDiameterInch = 2.75591; // 70 mm
 
+  protected static final int UPDATE_RATE = 200;
   // The Romi has the left and right motors set to
   // PWM channels 0 and 1 respectively
   private final Spark m_leftMotor = new Spark(0);
@@ -35,8 +37,18 @@ public class Drivetrain extends SubsystemBase {
 
   // Set up the BuiltInAccelerometer
   private final BuiltInAccelerometer m_accelerometer = new BuiltInAccelerometer();
-  private CubicSplineFollower waypointNav;
-  private DrivetrainModel model;
+  public CubicSplineFollower waypointNav;
+  public DrivetrainModel model;
+
+  private double time;
+
+	private DriveControlState controlState = DriveControlState.DISABLED;
+
+	private enum DriveControlState {
+		OPEN_LOOP, // open loop voltage control
+		PATH_FOLLOWING, // velocity PID control
+		DISABLED,
+	}
 
   /** Creates a new Drivetrain. */
   public Drivetrain() {
@@ -48,8 +60,42 @@ public class Drivetrain extends SubsystemBase {
     model = new DrivetrainModel();
 		model.setPosition(0.0, 0.0, 0.0);
 
-		waypointNav = new CubicSplineFollower(model);
+    waypointNav = new CubicSplineFollower(model);
+    this.updateThreadStart();
   }
+
+  protected void update() {
+		double time = Timer.getFPGATimestamp();
+		double deltaTime = time - this.time;
+		this.time = time;
+		this.updateOdometry(deltaTime);
+
+		switch (controlState) {
+			case OPEN_LOOP:
+				break;
+			case PATH_FOLLOWING:
+				driveWaypointNavigator();
+				break;
+			case DISABLED:
+				break;
+		}
+  }
+  
+  private void updateOdometry(double time) {
+		double leftSpeed = m_leftEncoder.getDistance()/time;
+		double rightSpeed = m_rightEncoder.getDistance()/time;
+		model.updateSpeed(leftSpeed, rightSpeed, time);
+		model.updateHeading(m_gyro.getAngleX());
+		model.updatePosition(time);
+  }
+  
+  public void startPathFollowing() {
+		if (controlState != DriveControlState.PATH_FOLLOWING) {
+			System.out.println("Switching to path following, time: " + time);
+			controlState = DriveControlState.PATH_FOLLOWING;
+		}
+		// BANANA TODO print waypoints
+	}
 
   private void driveWaypointNavigator() {
 		Tuple output = waypointNav.updatePursuit(model.center);
@@ -163,5 +209,19 @@ public class Drivetrain extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+  }
+
+  protected void updateThreadStart() {
+    Thread t = new Thread(() -> {
+        while (!Thread.interrupted()) {
+            this.update();
+            try {
+                Thread.sleep(1000 / UPDATE_RATE);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    });
+    t.start();
   }
 }
