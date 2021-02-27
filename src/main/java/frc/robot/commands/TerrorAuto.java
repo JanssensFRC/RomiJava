@@ -4,7 +4,10 @@
 
 package frc.robot.commands;
 
+import frc.controls.paths.paths;
+import frc.controls.paths.paths.MADNESS;
 import frc.robot.subsystems.Drivetrain;
+import frc.util.terrorMath;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class TerrorAuto extends SequentialCommandGroup {
@@ -15,17 +18,12 @@ public class TerrorAuto extends SequentialCommandGroup {
    * @param drivetrain The drivetrain subsystem on which this command will run
    */
   public TerrorAuto(Drivetrain drivetrain) {
-    final double kWheelDiameterInch = 2.75591; // 70 mm
-    final double wheelCircumference = kWheelDiameterInch*Math.PI;
-    addCommands(
-      new TankDrivePID(0, wheelCircumference,drivetrain)
-        /*new DriveArcade(-0.8, -0.3, 12.5, drivetrain),
-        new DriveArcade(-0.5, -0.5, 4, drivetrain),
-        new DriveArcade(-0.8, -0.3, 8, drivetrain),
-        new DriveArcade(-0.5, -0.7, 3, drivetrain),
-        new DriveArcade(-0.8, -0.5, 2.5, drivetrain),
-        new DriveArcade(-0.8, -0.4, 12, drivetrain),
-        new DriveArcade(-0.8, 0.5, 9, drivetrain)*/
-    );
+    addCommands(new TankDriveTime(-1.0, -1.0, 0.24, drivetrain),
+                new TankDriveTime(-1.0, -0.64, 1.07, drivetrain),
+                new TankDriveTime(-1.0, -0.45, 0.50, drivetrain),
+                new TankDriveTime(-1.0, -1.0, 0.65, drivetrain),
+                new TankDriveTime(-0.3, -1.0, 0.42, drivetrain),
+                new TankDriveTime(-0.7, -1.0, 1.2, drivetrain)//,
+                /*new TankDriveTime(-1.0, -1.0, 0.29, drivetrain)*/);
   }
 }

@@ -2,7 +2,10 @@ package frc.robot.commands;
 
 
 import frc.robot.subsystems.Drivetrain;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
+
 import java.lang.Math;
 
 public class PosTrack extends CommandBase {
@@ -26,7 +29,6 @@ public class PosTrack extends CommandBase {
     
     public PosTrack(Drivetrain drive) {
         m_drive = drive;
-        
     }
 
 
@@ -48,30 +50,16 @@ public class PosTrack extends CommandBase {
         absAng = 0;
         m_drive.resetEncoders();
     }
+
+    public void updatePosTrack(Drivetrain dt){
+        
+    }
     
       // Called every time the scheduler runs while the command is scheduled.
       @Override
       public void execute() {
-        L = m_drive.getLeftDistanceInch();
-        R = m_drive.getRightDistanceInch();
-        dL = L - intL;  //get distance traveled since last execute, to find effective arc length assuming constant velocity
-        dR = R - intR;
-        arcDist = (dL + dR) / 2; //get arc length of midpoint arc of both wheels, will be the average
-        if (dR == dL) { //going precisely straight, extreme edge case
-            linDist = arcDist;
-            absAng = intTheta;
-        } else {
-            r = wheelDist * (Math.abs((dL + dR) / (dL - dR)) + Math.abs((dL + dR) / (dR - dL))) / 2; //solving for midpoint arc radius using system of arc length equations
-            dTheta = Math.copySign((arcDist / r), (dR - dL)); //calculate angle turned using arc length formula after solving for radius
-            theta += dTheta; //increment absolute angle by turn angle
-            linDist = 2 * r * Math.cos(Math.abs(dTheta)); //using isoceles triangle base formula, calculate the linear distance between start and endpoint of the midpoint arc
-            absAng = intTheta + (dTheta / 2); //absolute angle between start and endpoint of midpoint arc
-        }
-        xPosition += r * Math.sin(absAng);
-        yPosition += r * Math.cos(absAng);
-
-        intL = L; //store last encoder positions/distances and absoulute angle
-        intR = R;
-        intTheta = theta;
+        SmartDashboard.putNumber("X Pos", xPosition);
+        SmartDashboard.putNumber("Y Pos", yPosition);
+        
     }
 }

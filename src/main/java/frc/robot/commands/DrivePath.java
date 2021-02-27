@@ -8,6 +8,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.controls.CubicSplineFollower.Waypoint;
 import frc.robot.subsystems.Drivetrain;
 import frc.util.Pose;
@@ -36,9 +37,14 @@ public class DrivePath extends CommandBase {
             dt.resetEncoders();
             dt.model.setPosition(startPose);
         }
+        new RunCommand(() -> new PosTrack(dt));
 
         for (Waypoint waypoint : waypoints) dt.waypointNav.addWaypoint(waypoint);
         dt.startPathFollowing();
+    }
+
+    public void execute() {
+        
     }
 
     @Override

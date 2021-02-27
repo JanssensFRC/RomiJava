@@ -9,9 +9,11 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.controls.CubicSplineFollower;
 import frc.robot.sensors.RomiGyro;
 import frc.util.Tuple;
+import frc.util.Utils;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Drivetrain extends SubsystemBase {
@@ -42,7 +44,27 @@ public class Drivetrain extends SubsystemBase {
 
   private double time;
 
-	private DriveControlState controlState = DriveControlState.DISABLED;
+  private DriveControlState controlState = DriveControlState.DISABLED;
+  
+  public double theta;
+    public double xPosition;
+    public double yPosition;
+    public double L;
+    public double R;
+    private double dTheta;
+    private double dL;
+    private double dR;
+    private double intTheta;
+    private double intL;
+    private double intR;
+    private double r;
+    private double arcDist;
+    private double linDist;
+    private double absAng;
+    private final double wheelDist = 2.75;
+    private double m_quickStopThreshold = 0.2;
+    private double m_quickStopAlpha = 0.1;
+    private double m_quickStopAccumulator;
 
 	private enum DriveControlState {
 		OPEN_LOOP, // open loop voltage control
@@ -82,11 +104,39 @@ public class Drivetrain extends SubsystemBase {
   }
   
   private void updateOdometry(double time) {
+    L = getLeftDistanceInch();
+    R = getRightDistanceInch();
+    dL = L ;//- intL;  //get distance traveled since last execute, to find effective arc length assuming constant velocity
+    dR = R ;//- intR;
+    arcDist = (dL + dR) / 2; //get arc length of midpoint arc of both wheels, will be the average
+    if (dR == dL) { //going precisely straight, extreme edge case
+        linDist = arcDist;
+        absAng = intTheta;
+    } 
+    else {
+        r = wheelDist * (Math.abs((dL + dR) / (dL - dR)) + Math.abs((dL + dR) / (dR - dL))) / 2; //solving for midpoint arc radius using system of arc length equations
+        dTheta = Math.copySign((arcDist / r), (dR - dL)); //calculate angle turned using arc length formula after solving for radius
+        theta += dTheta; //increment absolute angle by turn angle
+        linDist = 2 * r * Math.cos(Math.abs(dTheta)); //using isoceles triangle base formula, calculate the linear distance between start and endpoint of the midpoint arc
+        absAng = intTheta + (dTheta / 2); //absolute angle between start and endpoint of midpoint arc
+    }
+    xPosition += r * Math.sin(absAng);
+    yPosition += r * Math.cos(absAng);
+
+    //intL = L; //store last encoder positions/distances and absoulute angle
+    //intR = R;
+    resetEncoders();
+    intTheta = theta;
+
 		double leftSpeed = m_leftEncoder.getDistance()/time;
 		double rightSpeed = m_rightEncoder.getDistance()/time;
 		model.updateSpeed(leftSpeed, rightSpeed, time);
-		model.updateHeading(m_gyro.getAngleX());
-		model.updatePosition(time);
+		model.updateHeading(theta);
+    model.updatePosition(time);
+
+    SmartDashboard.putNumber("Theta", Math.toDegrees(theta));
+    SmartDashboard.putNumber("X Pos", xPosition);
+    SmartDashboard.putNumber("Y Pos", yPosition);
   }
   
   public void startPathFollowing() {
@@ -117,6 +167,76 @@ public class Drivetrain extends SubsystemBase {
   public void tankDrive(double leftSpeed, double rightSpeed){
     m_diffDrive.tankDrive(leftSpeed, rightSpeed);
   }
+
+  public void terribleDrive(double xSpeed, double zRotation, boolean isQuickTurn) {
+		double m_deadband = 0.02;
+		xSpeed = Utils.limit(xSpeed);
+		xSpeed = Utils.applyDeadband(xSpeed, m_deadband);
+
+		zRotation = Utils.limit(zRotation);
+		zRotation = Utils.applyDeadband(zRotation, m_deadband);
+
+		double angularPower;
+		boolean overPower;
+
+		if (isQuickTurn) {
+			if (Math.abs(xSpeed) < m_quickStopThreshold) {
+              m_quickStopAccumulator = (1 - m_quickStopAlpha) * m_quickStopAccumulator
+						+ m_quickStopAlpha * zRotation * 2;
+			}
+			overPower = true;
+			angularPower = zRotation;
+		} else {
+			overPower = false;
+			angularPower = Math.abs(xSpeed) * zRotation - m_quickStopAccumulator;
+
+			if (m_quickStopAccumulator > 1) {
+				m_quickStopAccumulator -= 1;
+			} else if (m_quickStopAccumulator < -1) {
+				m_quickStopAccumulator += 1;
+			} else {
+				m_quickStopAccumulator = 0.0;
+			}
+		}
+
+		double leftOutput = xSpeed + angularPower;
+		double rightOutput = xSpeed - angularPower;
+
+		// If rotation is overpowered, reduce both outputs to within acceptable range
+		if (overPower) {
+			if (leftOutput > 1.0) {
+				rightOutput -= leftOutput - 1.0;
+				leftOutput = 1.0;
+			} else if (rightOutput > 1.0) {
+				leftOutput -= rightOutput - 1.0;
+				rightOutput = 1.0;
+			} else if (leftOutput < -1.0) {
+				rightOutput -= leftOutput + 1.0;
+				leftOutput = -1.0;
+			} else if (rightOutput < -1.0) {
+				leftOutput -= rightOutput + 1.0;
+				rightOutput = -1.0;
+			}
+		}
+
+		// Normalize the wheel speeds
+		double maxMagnitude = Math.max(Math.abs(leftOutput), Math.abs(rightOutput));
+		if (maxMagnitude > 1.0) {
+			leftOutput /= maxMagnitude;
+			rightOutput /= maxMagnitude;
+		}
+
+		setOpenLoop(leftOutput, rightOutput);
+  }
+  
+  private void setOpenLoop(double left, double right) {
+		if (controlState != DriveControlState.OPEN_LOOP) {
+			System.out.println("Switching to open loop control, time: " + time);
+			controlState = DriveControlState.OPEN_LOOP;
+		}
+		m_leftMotor.set(right);
+		m_rightMotor.set(left);
+	}
 
   public void resetEncoders() {
     m_leftEncoder.reset();
