@@ -19,11 +19,11 @@ public class TerrorAuto extends SequentialCommandGroup {
    */
   public TerrorAuto(Drivetrain drivetrain) {
     addCommands(new TankDriveTime(-1.0, -1.0, 0.24, drivetrain),
-                new TankDriveTime(-1.0, -0.64, 1.07, drivetrain),
-                new TankDriveTime(-1.0, -0.45, 0.50, drivetrain),
-                new TankDriveTime(-1.0, -1.0, 0.65, drivetrain),
+                new TankDriveTime(-1.0, -0.66, 1.07, drivetrain),
+                new TankDriveTime(-1.0, -0.45, 0.63, drivetrain),
+                new TankDriveTime(-1.0, -1.0, 0.665, drivetrain),
                 new TankDriveTime(-0.3, -1.0, 0.42, drivetrain),
-                new TankDriveTime(-0.7, -1.0, 1.2, drivetrain)//,
+                new TankDriveTime(-0.7, -1.0, 1.20, drivetrain)//,
                 /*new TankDriveTime(-1.0, -1.0, 0.29, drivetrain)*/);
   }
 }
