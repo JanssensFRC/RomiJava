@@ -1,0 +1,8 @@
+{
+  "lengthUnit": "Inch",
+  "exportUnit": "Same as Project",
+  "maxVelocity": 10.0,
+  "maxAcceleration": 5.0,
+  "wheelBase": 5.86,
+  "gameName": "BAE Systems MiniBot Challenge"
+}

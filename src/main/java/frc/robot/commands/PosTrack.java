@@ -58,8 +58,7 @@ public class PosTrack extends CommandBase {
       // Called every time the scheduler runs while the command is scheduled.
       @Override
       public void execute() {
-        SmartDashboard.putNumber("X Pos", xPosition);
-        SmartDashboard.putNumber("Y Pos", yPosition);
-        
+        SmartDashboard.putNumber("X Position (Vince)", xPosition);
+        SmartDashboard.putNumber("Y Position (Vince)", yPosition);
     }
 }

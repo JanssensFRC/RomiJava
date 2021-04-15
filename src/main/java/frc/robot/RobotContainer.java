@@ -11,6 +11,7 @@ import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.AutonomousDistance;
 import frc.robot.commands.AutonomousTime;
 import frc.robot.commands.DriverControl;
+import frc.robot.commands.PosTrack;
 import frc.robot.commands.TankDrive;
 import frc.robot.commands.TerrorAuto;
 import frc.robot.subsystems.Drivetrain;
@@ -31,6 +32,7 @@ import edu.wpi.first.wpilibj2.command.button.Button;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Drivetrain m_drivetrain = new Drivetrain();
+  private final PosTrack positionTracker = new PosTrack(m_drivetrain);
   private final OnBoardIO m_onboardIO = new OnBoardIO(ChannelMode.INPUT, ChannelMode.INPUT);
 
   // Assumes a gamepad plugged into channnel 0

@@ -106,26 +106,32 @@ public class Drivetrain extends SubsystemBase {
   private void updateOdometry(double time) {
     L = getLeftDistanceInch();
     R = getRightDistanceInch();
-    dL = L ;//- intL;  //get distance traveled since last execute, to find effective arc length assuming constant velocity
-    dR = R ;//- intR;
+    SmartDashboard.putNumber("Left Encoder", L);
+    SmartDashboard.putNumber("Right Encoder", R);
+    dL = L - intL;  //get distance traveled since last execute, to find effective arc length assuming constant velocity
+    dR = R - intR;
+    SmartDashboard.putNumber("dL", dL);
+    SmartDashboard.putNumber("dR", dR);
     arcDist = (dL + dR) / 2; //get arc length of midpoint arc of both wheels, will be the average
     if (dR == dL) { //going precisely straight, extreme edge case
         linDist = arcDist;
         absAng = intTheta;
     } 
     else {
-        r = wheelDist * (Math.abs((dL + dR) / (dL - dR)) + Math.abs((dL + dR) / (dR - dL))) / 2; //solving for midpoint arc radius using system of arc length equations
+        r = wheelDist * (Math.abs((dL + dR) / (dL - dR)));// + Math.abs((dL + dR) / (dR - dL))) / 2; //solving for midpoint arc radius using system of arc length equations
         dTheta = Math.copySign((arcDist / r), (dR - dL)); //calculate angle turned using arc length formula after solving for radius
         theta += dTheta; //increment absolute angle by turn angle
-        linDist = 2 * r * Math.cos(Math.abs(dTheta)); //using isoceles triangle base formula, calculate the linear distance between start and endpoint of the midpoint arc
-        absAng = intTheta + (dTheta / 2); //absolute angle between start and endpoint of midpoint arc
+        linDist = 2 * r * Math.cos(Math.abs(Math.PI / 2 + (dTheta / 2))); // using isoceles triangle base formula, calculate
+                                                                    // the linear distance between start and endpoint of
+                                                                    // the midpoint arc
+        absAng = intTheta + dTheta / 2 + Math.PI / 2; //absolute angle between start and endpoint of midpoint arc
     }
-    xPosition += r * Math.sin(absAng);
-    yPosition += r * Math.cos(absAng);
+    xPosition += linDist * Math.sin(absAng);
+    yPosition += linDist * Math.cos(absAng);
 
-    //intL = L; //store last encoder positions/distances and absoulute angle
-    //intR = R;
-    resetEncoders();
+    intL = L; //store last encoder positions/distances and absoulute angle
+    intR = R;
+    //resetEncoders();
     intTheta = theta;
 
 		double leftSpeed = m_leftEncoder.getDistance()/time;
