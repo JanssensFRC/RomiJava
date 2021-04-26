@@ -118,16 +118,16 @@ public class Drivetrain extends SubsystemBase {
         absAng = intTheta;
     } 
     else {
-        r = wheelDist * (Math.abs((dL + dR) / (dL - dR)));// + Math.abs((dL + dR) / (dR - dL))) / 2; //solving for midpoint arc radius using system of arc length equations
-        dTheta = Math.copySign((arcDist / r), (dR - dL)); //calculate angle turned using arc length formula after solving for radius
-        theta += dTheta; //increment absolute angle by turn angle
-        linDist = 2 * r * Math.cos(Math.abs(Math.PI / 2 + (dTheta / 2))); // using isoceles triangle base formula, calculate
-                                                                    // the linear distance between start and endpoint of
-                                                                    // the midpoint arc
-        absAng = intTheta + dTheta / 2 + Math.PI / 2; //absolute angle between start and endpoint of midpoint arc
+      r = wheelDist * (Math.abs((dL + dR) / (dL - dR)));// + Math.abs((dL + dR) / (dR - dL))) / 2; //solving for midpoint arc radius using system of arc length equations
+      dTheta = Math.copySign((arcDist / r), (dR - dL)); //calculate angle turned using arc length formula after solving for radius
+      theta += dTheta; //increment absolute angle by turn angle
+      linDist = Math.copySign(2 * r * Math.cos(Math.abs(Math.PI/2 - dTheta/2)), (dL + dR)); // using isoceles triangle base formula, calculate
+                                                                  // the linear distance between start and endpoint of
+                                                                  // the midpoint arc
+      absAng = intTheta + dTheta / 2 + Math.PI / 2; //absolute angle between start and endpoint of midpoint arc
     }
-    xPosition += linDist * Math.sin(absAng);
-    yPosition += linDist * Math.cos(absAng);
+    xPosition += linDist * Math.cos(absAng);
+    yPosition += linDist * Math.sin(absAng);
 
     intL = L; //store last encoder positions/distances and absoulute angle
     intR = R;
@@ -143,6 +143,8 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putNumber("Theta", Math.toDegrees(theta));
     SmartDashboard.putNumber("X Pos", xPosition);
     SmartDashboard.putNumber("Y Pos", yPosition);
+    SmartDashboard.putNumber("linDist", linDist);
+    SmartDashboard.putNumber("absAng", absAng);
   }
   
   public void startPathFollowing() {

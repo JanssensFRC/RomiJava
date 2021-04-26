@@ -20,13 +20,13 @@ public class DrivetrainModel {
 	private static final double DRIVETRAIN_MASS = 0.2342; // kg
 	public double topSpeed;
 	protected static final double MAX_SPEED_HIGH = 4.0;
-	public static final double WHEEL_BASE = 0.165; // meters
+	public static final double WHEEL_BASE = 0.145; // meters
 	private Boolean COAST_MODE = false;
 	public Pose center;
 	private DrivetrainSide left, right;
 	public static final double WHEEL_RADIUS = 0.070; // meters
 	public final static double WHEEL_CIRCUMFERENCE = DrivetrainModel.WHEEL_RADIUS * 2.0 * Math.PI;
-	protected static final double MAX_SPEED_LOW = WHEEL_CIRCUMFERENCE * 150 / 60;
+	protected static final double MAX_SPEED_LOW = WHEEL_CIRCUMFERENCE;
 	private static final double MOTORS_PER_SIDE = 1.0; // Minicim is 0.58
 	private double gearRatio;
 	private static final double BASE_GEAR_RATIO = 1; // Reduction
