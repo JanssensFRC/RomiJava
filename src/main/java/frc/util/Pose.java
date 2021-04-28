@@ -2,13 +2,16 @@ package frc.util;
 
 import java.io.IOException;
 
+import edu.wpi.first.wpilibj.Sendable;
+import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
+
 /**
  * Simple Cartesian coordinate class
  *
  * @author eric
  *
  */
-public class Pose {
+public class Pose implements Sendable {
 	public double x;
 	public double y;
 	public double r;
@@ -18,8 +21,9 @@ public class Pose {
 
 	/**
 	 * Constructor for CartesianCoordinate class
-	 * @param x the x location in meters
-	 * @param y the y location in meters
+	 * 
+	 * @param x       the x location in meters
+	 * @param y       the y location in meters
 	 * @param heading the heading angle in degress, is converted into radians
 	 */
 	public Pose(double x, double y, double heading) {
@@ -31,10 +35,10 @@ public class Pose {
 	}
 
 	// public Pose(double x, double y, double r){
-	// 	this.x = x;
-	// 	this.y = y;
-	// 	this.r = r;
-	// 	this.heading = Math.toDegrees(r);
+	// this.x = x;
+	// this.y = y;
+	// this.r = r;
+	// this.heading = Math.toDegrees(r);
 	// }
 
 	public Pose(double x, double y) {
@@ -70,5 +74,11 @@ public class Pose {
 
 	public static void main(String[] args) throws IOException {
 		System.out.println();
+	}
+
+	@Override
+	public void initSendable(SendableBuilder builder) {
+		// TODO Auto-generated method stub
+
 	}
 }

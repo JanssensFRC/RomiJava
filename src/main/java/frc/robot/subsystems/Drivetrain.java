@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -15,6 +16,7 @@ import frc.robot.sensors.RomiGyro;
 import frc.util.Tuple;
 import frc.util.Utils;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 
 public class Drivetrain extends SubsystemBase {
   private static final double kCountsPerRevolution = 1440.0;
@@ -45,26 +47,28 @@ public class Drivetrain extends SubsystemBase {
   private double time;
 
   private DriveControlState controlState = DriveControlState.DISABLED;
-  
+
   public double theta;
-    public double xPosition;
-    public double yPosition;
-    public double L;
-    public double R;
-    private double dTheta;
-    private double dL;
-    private double dR;
-    private double intTheta;
-    private double intL;
-    private double intR;
-    private double r;
-    private double arcDist;
-    private double linDist;
-    private double absAng;
-    private final double wheelDist = 2.75;
-    private double m_quickStopThreshold = 0.2;
-    private double m_quickStopAlpha = 0.1;
-    private double m_quickStopAccumulator;
+  public double xPosition;
+  public double yPosition;
+  public double L;
+  public double R;
+  private double prevLeftEncoder = 0;
+  private double prevRightEncoder = 0;
+  private double dTheta;
+  private double dL;
+  private double dR;
+  private double intTheta;
+  private double intL;
+  private double intR;
+  private double r;
+  private double arcDist;
+  private double linDist;
+  private double absAng;
+  private final double wheelDist = 2.75;
+  private double m_quickStopThreshold = 0.2;
+  private double m_quickStopAlpha = 0.1;
+  private double m_quickStopAccumulator;
 
 	private enum DriveControlState {
 		OPEN_LOOP, // open loop voltage control
@@ -90,7 +94,7 @@ public class Drivetrain extends SubsystemBase {
 		double time = Timer.getFPGATimestamp();
 		double deltaTime = time - this.time;
 		this.time = time;
-		this.updateOdometry(deltaTime);
+    this.updateOdometry(deltaTime);
 
 		switch (controlState) {
 			case OPEN_LOOP:
@@ -104,6 +108,7 @@ public class Drivetrain extends SubsystemBase {
   }
   
   private void updateOdometry(double time) {
+    double thetaError;
     L = getLeftDistanceInch();
     R = getRightDistanceInch();
     SmartDashboard.putNumber("Left Encoder", L);
@@ -120,24 +125,29 @@ public class Drivetrain extends SubsystemBase {
     else {
       r = wheelDist * (Math.abs((dL + dR) / (dL - dR)));// + Math.abs((dL + dR) / (dR - dL))) / 2; //solving for midpoint arc radius using system of arc length equations
       dTheta = Math.copySign((arcDist / r), (dR - dL)); //calculate angle turned using arc length formula after solving for radius
-      theta += dTheta; //increment absolute angle by turn angle
+      theta += dTheta; //increment absolute angle by turn angl
+
       linDist = Math.copySign(2 * r * Math.cos(Math.abs(Math.PI/2 - dTheta/2)), (dL + dR)); // using isoceles triangle base formula, calculate
                                                                   // the linear distance between start and endpoint of
                                                                   // the midpoint arc
       absAng = intTheta + dTheta / 2 + Math.PI / 2; //absolute angle between start and endpoint of midpoint arc
     }
+    thetaError = absAng - getGyroAngleX();
     xPosition += linDist * Math.cos(absAng);
     yPosition += linDist * Math.sin(absAng);
 
     intL = L; //store last encoder positions/distances and absoulute angle
     intR = R;
     //resetEncoders();
-    intTheta = theta;
+    intTheta = Math.toRadians(getGyroAngleZ());
 
-		double leftSpeed = m_leftEncoder.getDistance()/time;
-		double rightSpeed = m_rightEncoder.getDistance()/time;
+
+		double leftSpeed = ((m_leftEncoder.getDistance()-prevLeftEncoder)*0.0254)/time;
+    double rightSpeed = ((m_rightEncoder.getDistance()-prevRightEncoder)*0.0254)/time;
+    prevRightEncoder = m_rightEncoder.getDistance();
+    prevLeftEncoder = m_leftEncoder.getDistance();
 		model.updateSpeed(leftSpeed, rightSpeed, time);
-		model.updateHeading(theta);
+		model.updateHeading(getGyroAngleZ());
     model.updatePosition(time);
 
     SmartDashboard.putNumber("Theta", Math.toDegrees(theta));
@@ -145,6 +155,9 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putNumber("Y Pos", yPosition);
     SmartDashboard.putNumber("linDist", linDist);
     SmartDashboard.putNumber("absAng", absAng);
+    SmartDashboard.putNumber("Theta Error", thetaError);
+    SmartDashboard.putNumber("Center X Pose", model.center.x);
+    SmartDashboard.putNumber("Center Y Pose", model.center.y);
   }
   
   public void startPathFollowing() {
