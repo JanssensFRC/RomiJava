@@ -5,7 +5,7 @@
 package frc.robot.commands;
 
 import frc.controls.paths.paths;
-import frc.controls.paths.paths.MADNESS;
+import frc.controls.paths.paths.FRANTIC;
 import frc.robot.subsystems.Drivetrain;
 import frc.util.terrorMath;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -18,12 +18,17 @@ public class TerrorAuto extends SequentialCommandGroup {
    * @param drivetrain The drivetrain subsystem on which this command will run
    */
   public TerrorAuto(Drivetrain drivetrain) {
-    addCommands(new TankDriveTime(-1.0, -1.0, 0.24, drivetrain),
-                new TankDriveTime(-1.0, -0.66, 1.07, drivetrain),
-                new TankDriveTime(-1.0, -0.45, 0.63, drivetrain),
-                new TankDriveTime(-1.0, -1.0, 0.665, drivetrain),
-                new TankDriveTime(-0.3, -1.0, 0.42, drivetrain),
-                new TankDriveTime(-0.7, -1.0, 1.20, drivetrain)//,
+    addCommands(new TankDriveTime(-1.0, -1.0, 0.15, drivetrain),
+                new TankDriveTime(-1.0, -0.64, 0.9, drivetrain),
+                new TankDriveTime(0.0, 0.0, 0.125, drivetrain),
+                new TankDriveTime(0.78, 1.0, 1.0, drivetrain),
+                new TankDriveTime(0.6, 1.0, 1.2, drivetrain)
                 /*new TankDriveTime(-1.0, -1.0, 0.29, drivetrain)*/);
   }
+    // public TerrorAuto(Drivetrain drive) {
+    //     super(new DrivePath(drive, false, FRANTIC.START, FRANTIC.WAYPOINTS));
+    // }
+
 }
+
+

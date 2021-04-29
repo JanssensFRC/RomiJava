@@ -11,8 +11,9 @@ public class paths {
 		Waypoint[] WAYPOINTS = null;
     }
     
-    public static class MADNESS implements PATH_SET{
-        public final static Pose START = new Pose(terrorMath.toMeters(4.5),terrorMath.toMeters(-13.5),180);
-        public static final Waypoint[] WAYPOINTS = {new Waypoint(terrorMath.toMeters(31.5), terrorMath.toMeters(-12.5), 90, -0.3, false)};
+    public static class FRANTIC implements PATH_SET{
+        public final static Pose START = new Pose(terrorMath.toMeters(7.5),terrorMath.toMeters(0),180);
+        public static final Waypoint[] WAYPOINTS = {
+          new Waypoint(-0.226678, 0.371058, 90, -0.3, false)};
     }
 }
