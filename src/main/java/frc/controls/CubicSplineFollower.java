@@ -32,9 +32,9 @@ public class CubicSplineFollower {
     private final double kNextSpeedFactor = 0.02; // 0.0 - 1.0
     private final double kTurnMultiplier = 1.0;
     private final double kMaxAngularDiffFactor = 3.0; // m/s * 2
-    private final double kSlowdownRadius = 1.0; // m
+    private final double kSlowdownRadius = 0.0254; // m
     private final double kMinApproachSpeedCritical = 0.2; // %
-    private final double kRadiusCritical = 0.1;; // m
+    private final double kRadiusCritical = 0.00254; // m
     private final double kScaleRadiusPath = 0.1; // constant
     private double kRadiusPath = 0.0; // this updates dynamically
     // deg, keeping this because this dictates when the robot switches
