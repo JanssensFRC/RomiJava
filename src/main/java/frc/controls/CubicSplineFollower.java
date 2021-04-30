@@ -34,8 +34,8 @@ public class CubicSplineFollower {
     private final double kMaxAngularDiffFactor = 3.0; // m/s * 2
     private final double kSlowdownRadius = 0.0254; // m
     private final double kMinApproachSpeedCritical = 0.2; // %
-    private final double kRadiusCritical = 0.00254; // m
-    private final double kScaleRadiusPath = 0.1; // constant
+    private final double kRadiusCritical = 0.0254*1; // m
+    private final double kScaleRadiusPath = 0.5; // constant
     private double kRadiusPath = 0.0; // this updates dynamically
     // deg, keeping this because this dictates when the robot switches
     private final double kAngularErrorPath = 20.0;
@@ -163,7 +163,7 @@ public class CubicSplineFollower {
         double rightSpeed = desiredSpeed + (lrSpeedDifference / 2);
         if (debug) System.out.println(desiredSpeed + " " + lrSpeedDifference);
         if (debug) System.out.println(leftSpeed + " " + rightSpeed);
-        return new Tuple(leftSpeed/maxSpeed, rightSpeed/maxSpeed);
+        return new Tuple(-leftSpeed/maxSpeed, rightSpeed/maxSpeed);
     }
 
     /**

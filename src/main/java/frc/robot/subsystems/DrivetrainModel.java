@@ -27,7 +27,7 @@ public class DrivetrainModel {
 	public static final double WHEEL_RADIUS = 0.070; // meters
 	public final static double WHEEL_CIRCUMFERENCE = DrivetrainModel.WHEEL_RADIUS * 2.0 * Math.PI;
 	protected static final double MAX_SPEED_LOW = WHEEL_CIRCUMFERENCE;
-	private static final double MOTORS_PER_SIDE = 1.0; // Minicim is 0.58
+	private static final double MOTORS_PER_SIDE = 0.1; // Minicim is 0.58
 	private double gearRatio;
 	private static final double BASE_GEAR_RATIO = 1; // Reduction
 	private static final double HIGH_GEAR_RATIO_MODIFIER = 2.0;

@@ -12,8 +12,9 @@ public class paths {
     }
     
     public static class FRANTIC implements PATH_SET{
-        public final static Pose START = new Pose(terrorMath.toMeters(7.5),terrorMath.toMeters(0),180);
+        public final static Pose START = new Pose(terrorMath.toMeters(0.0),terrorMath.toMeters(0.0), 0.0);
         public static final Waypoint[] WAYPOINTS = {
-          new Waypoint(-0.226678, 0.371058, 90, -0.3, false)};
+          //new Waypoint(-0.226678, 0.371058, 90.0, 0.5, false)};
+          new Waypoint(1.0, 0.0, 0.0, -1.0, false)};
     }
 }

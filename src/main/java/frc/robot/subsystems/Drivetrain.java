@@ -29,7 +29,6 @@ public class Drivetrain extends SubsystemBase {
   private final Spark m_leftMotor = new Spark(0);
   private final Spark m_rightMotor = new Spark(1);
 
-  private final PWM servoTest = new PWM(4);
 
   // The Romi has onboard encoders that are hardcoded
   // to use DIO pins 4/5 and 6/7 for the left and right
@@ -148,7 +147,6 @@ public class Drivetrain extends SubsystemBase {
     //resetEncoders();
     intTheta = Math.toRadians(getGyroAngleZ());
 
-
 		double leftSpeed = ((m_leftEncoder.getDistance()-prevLeftEncoder)*0.0254)/time;
     double rightSpeed = ((m_rightEncoder.getDistance()-prevRightEncoder)*0.0254)/time;
     prevRightEncoder = m_rightEncoder.getDistance();
@@ -157,14 +155,9 @@ public class Drivetrain extends SubsystemBase {
 		model.updateHeading(getGyroAngleZ());
     model.updatePosition(time);
 
-    SmartDashboard.putNumber("Theta", Math.toDegrees(theta));
-    SmartDashboard.putNumber("X Pos", xPosition);
-    SmartDashboard.putNumber("Y Pos", yPosition);
-    SmartDashboard.putNumber("linDist", linDist);
-    SmartDashboard.putNumber("absAng", absAng);
-    SmartDashboard.putNumber("Theta Error", thetaError);
     SmartDashboard.putNumber("Center X Pose", model.center.x);
     SmartDashboard.putNumber("Center Y Pose", model.center.y);
+    SmartDashboard.putNumber("Gyro Heading", getGyroAngleZ());
   }
   
   public void startPathFollowing() {
@@ -357,7 +350,6 @@ public class Drivetrain extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    servoTest.setSpeed(1.0);
   }
 
   protected void updateThreadStart() {
