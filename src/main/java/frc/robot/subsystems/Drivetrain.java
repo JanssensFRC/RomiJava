@@ -85,6 +85,8 @@ public class Drivetrain extends SubsystemBase {
     m_rightEncoder.setDistancePerPulse((Math.PI * kWheelDiameterInch) / kCountsPerRevolution);
     resetEncoders();
 
+    m_diffDrive.setSafetyEnabled(false);
+
     model = new DrivetrainModel();
 		model.setPosition(0.0, 0.0, 0.0);
 
@@ -109,9 +111,6 @@ public class Drivetrain extends SubsystemBase {
 		}
   }
 
-  private void driveServo(){
-    
-  }
   
   private void updateOdometry(double time) {
     double thetaError;
@@ -173,7 +172,7 @@ public class Drivetrain extends SubsystemBase {
 		double leftSpeed = output.left;
     double rightSpeed = output.right;
     
-    setSpeed(leftSpeed, rightSpeed);
+    setSpeed(leftSpeed, -rightSpeed);
   }
   
   private void setSpeed(double left, double right) {

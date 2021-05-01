@@ -31,7 +31,7 @@ public class DrivetrainModel {
 	private double gearRatio;
 	private static final double BASE_GEAR_RATIO = 1; // Reduction
 	private static final double HIGH_GEAR_RATIO_MODIFIER = 2.0;
-	private static final double DRIVETRAIN_FRICTION = 15;
+	private static final double DRIVETRAIN_FRICTION = 1;
 
 	public DrivetrainModel() {
 		center = new Pose(0.0, 0.0, 0.0); // Initial robot position
