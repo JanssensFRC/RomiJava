@@ -18,15 +18,15 @@ public class TerrorAuto extends SequentialCommandGroup {
    * @param drivetrain The drivetrain subsystem on which this command will run
    */
   public TerrorAuto(Drivetrain drivetrain) {
-  //   addCommands(new TankDriveTime(-1.0, -1.0, 0.15, drivetrain),
-  //               new TankDriveTime(-1.0, -0.64, 0.9, drivetrain),
-  //               new TankDriveTime(0.0, 0.0, 0.125, drivetrain),
-  //               new TankDriveTime(0.78, 1.0, 1.0, drivetrain),
-  //               new TankDriveTime(0.6, 1.0, 1.2, drivetrain)
-  //               /*new TankDriveTime(-1.0, -1.0, 0.29, drivetrain)*/);
-  // }
-        super(new DrivePath(drivetrain, false, FRANTIC.START, FRANTIC.WAYPOINTS));
-    }
+    addCommands(new TankDriveTime(-1.0, -1.0, 0.15, drivetrain),
+                new TankDriveTime(-1.0, -0.64, 0.9, drivetrain),
+                new TankDriveTime(0.0, 0.0, 0.125, drivetrain),
+                new TankDriveTime(0.78, 1.0, 1.0, drivetrain),
+                new TankDriveTime(0.6, 1.0, 1.2, drivetrain)
+                /*new TankDriveTime(-1.0, -1.0, 0.29, drivetrain)*/);
+  }
+    //     super(new DrivePath(drivetrain, false, FRANTIC.START, FRANTIC.WAYPOINTS));
+    // }
 
 }
 
