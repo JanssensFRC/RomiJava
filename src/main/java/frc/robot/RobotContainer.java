@@ -12,6 +12,7 @@ import frc.robot.commands.AutonomousDistance;
 import frc.robot.commands.AutonomousTime;
 import frc.robot.commands.DriverControl;
 import frc.robot.commands.PosTrack;
+import frc.robot.commands.Spots2And3;
 import frc.robot.commands.TankDrive;
 import frc.robot.commands.TerrorAuto;
 import frc.robot.subsystems.Drivetrain;
@@ -81,6 +82,7 @@ public class RobotContainer {
 
     // Setup SmartDashboard options
     m_chooser.setDefaultOption("TerrorAuto", new TerrorAuto(m_drivetrain));
+    m_chooser.addOption("Spots 2 and 3", new Spots2And3(m_drivetrain));
     m_chooser.addOption("Auto Routine Distance", new AutonomousDistance(m_drivetrain));
     m_chooser.addOption("Auto Routine Time", new AutonomousTime(m_drivetrain));
     SmartDashboard.putData(m_chooser);

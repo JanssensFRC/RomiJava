@@ -24,4 +24,12 @@ public class paths {
           new Waypoint(0.2, 1.41, -414.0, 1.0, false), // 3rd Ball
         new Waypoint(0.56, 1.52, -496.0, -1.0, false)*/};
     }
+
+    public static class ANTICS implements PATH_SET{
+      public final static Pose START = new Pose(terrorMath.toMeters(0.0),terrorMath.toMeters(0.0), 0.0);
+      public static final Waypoint[] WAYPOINTSONE = {
+        new Waypoint(terrorMath.toMeters(1.5), terrorMath.toMeters(70), 20.0, 0.8, false)
+      };
+
+    }
 }
