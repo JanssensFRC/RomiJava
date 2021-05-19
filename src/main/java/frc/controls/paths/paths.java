@@ -28,7 +28,7 @@ public class paths {
     public static class ANTICS implements PATH_SET{
       public final static Pose START = new Pose(terrorMath.toMeters(0.0),terrorMath.toMeters(0.0), 0.0);
       public static final Waypoint[] WAYPOINTSONE = {
-        new Waypoint(terrorMath.toMeters(1.5), terrorMath.toMeters(70), 20.0, 0.8, false)
+        new Waypoint(terrorMath.toMeters(1.5), terrorMath.toMeters(70), 15.0, 0.7, false)
       };
 
     }

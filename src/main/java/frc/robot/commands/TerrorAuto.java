@@ -9,6 +9,7 @@ import frc.controls.paths.paths.ANTICS;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.commands.Spots2And3;
 import frc.util.terrorMath;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class TerrorAuto extends SequentialCommandGroup {
@@ -21,7 +22,8 @@ public class TerrorAuto extends SequentialCommandGroup {
   public TerrorAuto(Drivetrain drivetrain) {
   //   addCommands();
   // }
-        super(new DrivePath(drivetrain, false, ANTICS.START, ANTICS.WAYPOINTSONE));
+        super(new InstantCommand(() -> drivetrain.resetEncoders()),
+        new DrivePath(drivetrain, false, ANTICS.START, ANTICS.WAYPOINTSONE));
     }
 
 }
