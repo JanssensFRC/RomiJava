@@ -15,6 +15,7 @@ import frc.controls.CubicSplineFollower;
 import frc.robot.sensors.RomiGyro;
 import frc.util.Tuple;
 import frc.util.Utils;
+import frc.util.terrorMath;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.PWM;
@@ -154,9 +155,9 @@ public class Drivetrain extends SubsystemBase {
 		model.updateHeading(getGyroAngleZ());
     model.updatePosition(time);
 
-    SmartDashboard.putNumber("Center X Pose", model.center.x);
-    SmartDashboard.putNumber("Center Y Pose", model.center.y);
-    SmartDashboard.putNumber("Gyro Heading", getGyroAngleZ());
+    SmartDashboard.putNumber("Center X Pose", terrorMath.toInches(model.center.x));
+    SmartDashboard.putNumber("Center Y Pose", terrorMath.toInches(model.center.y));
+    SmartDashboard.putNumber("Gyro Heading", model.center.heading);
   }
   
   public void startPathFollowing() {
@@ -249,7 +250,7 @@ public class Drivetrain extends SubsystemBase {
 		setOpenLoop(leftOutput, rightOutput);
   }
   
-  private void setOpenLoop(double left, double right) {
+  public void setOpenLoop(double left, double right) {
 		if (controlState != DriveControlState.OPEN_LOOP) {
 			System.out.println("Switching to open loop control, time: " + time);
 			controlState = DriveControlState.OPEN_LOOP;

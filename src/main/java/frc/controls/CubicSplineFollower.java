@@ -10,6 +10,7 @@ package frc.controls;
 import java.util.LinkedList;
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.DrivetrainModel;
 import frc.util.Geometry;
 import frc.util.Pose;
@@ -34,8 +35,8 @@ public class CubicSplineFollower {
     private final double kMaxAngularDiffFactor = 3.0; // m/s * 2
     private final double kSlowdownRadius = 0.0254*3; // m
     private final double kMinApproachSpeedCritical = 0.2; // %
-    private final double kRadiusCritical = 0.0254*1; // m
-    private final double kScaleRadiusPath = 0.025; // constant
+    private final double kRadiusCritical = 0.0254*3; // m
+    private final double kScaleRadiusPath = 0.05; // constant
     private double kRadiusPath = 0.0; // this updates dynamically
     // deg, keeping this because this dictates when the robot switches
     private final double kAngularErrorPath = 20.0;
@@ -48,6 +49,8 @@ public class CubicSplineFollower {
     private double maxTurn = 0.0;
 
     private static final Boolean debug = false;
+
+    private double waypointCount = 0;
 
     public CubicSplineFollower(DrivetrainModel drivetrain) {
         drivetrainState = drivetrain;
@@ -68,7 +71,11 @@ public class CubicSplineFollower {
         if (finished && !isFinished) System.out.println("Finished Path Following");
         isFinished = finished;
         if (isFinished) return new Tuple(0.0, 0.0);
-        if (curWaypoint == null) curWaypoint = waypoints.pollFirst();
+        if (curWaypoint == null) {
+            curWaypoint = waypoints.pollFirst();
+            waypointCount++;
+        }
+        SmartDashboard.putNumber("Waypoint", waypointCount);
         double distanceFromWaypoint = Geometry.distance(robotPose, curWaypoint);
         maxSpeed = drivetrainState.topSpeed;
         ffSpeed = curWaypoint.speed();
@@ -93,6 +100,7 @@ public class CubicSplineFollower {
         if (nextWaypoint) {
             System.out.println("At Waypoint: " + curWaypoint.toString());
             curWaypoint = waypoints.pollFirst();
+            waypointCount++;
             return updatePursuit(robotPose);
         }
         // if not in a special case, just run path following
