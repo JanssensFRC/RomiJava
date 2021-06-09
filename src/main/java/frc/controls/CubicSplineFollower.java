@@ -11,11 +11,13 @@ import java.util.LinkedList;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.DrivetrainModel;
 import frc.util.Geometry;
 import frc.util.Pose;
 import frc.util.Tuple;
 import frc.util.Utils;
+import frc.util.terrorMath;
 
 /**
  * Add your docs here.
@@ -43,6 +45,7 @@ public class CubicSplineFollower {
     private final double kMaxSplineAngle = Math.PI * 0.3;
 
     private DrivetrainModel drivetrainState;
+    private Drivetrain dt;
 
     private double maxSpeed;
     private double ffSpeed = 0.0;
@@ -99,6 +102,9 @@ public class CubicSplineFollower {
 
         if (nextWaypoint) {
             System.out.println("At Waypoint: " + curWaypoint.toString());
+            System.out.println("Real Position: X:" + SmartDashboard.getNumber("Center X Pose", 0.0) + 
+                                                " / Y:"+ SmartDashboard.getNumber("Center Y Pose", 0.0) +
+                                                " / Heading:" + SmartDashboard.getNumber("Gyro Heading", 0.0));
             curWaypoint = waypoints.pollFirst();
             waypointCount++;
             return updatePursuit(robotPose);
@@ -306,7 +312,7 @@ public class CubicSplineFollower {
 
         @Override
         public String toString() {
-            return "x: " + x + ", y: " + y + ", heading: " + heading + ", speed: " + kSpeed.getAsDouble();
+            return "x: " + terrorMath.toInches(x) + ", y: " + terrorMath.toInches(y) + ", heading: " + heading + ", speed: " + kSpeed.getAsDouble();
         }
 
         public double speed() {
