@@ -10,6 +10,7 @@ package frc.controls;
 import java.util.LinkedList;
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.DrivetrainModel;
@@ -35,10 +36,10 @@ public class CubicSplineFollower {
     private final double kNextSpeedFactor = 0.02; // 0.0 - 1.0
     private final double kTurnMultiplier = 1.0;
     private final double kMaxAngularDiffFactor = 3.0; // m/s * 2
-    private final double kSlowdownRadius = 0.0254*3; // m
+    private final double kSlowdownRadius = 0.0254*10; // m
     private final double kMinApproachSpeedCritical = 0.2; // %
-    private final double kRadiusCritical = 0.0254*3; // m
-    private final double kScaleRadiusPath = 0.05; // constant
+    private final double kRadiusCritical = 0.0254*5; // m
+    private final double kScaleRadiusPath = 0.2; // constant
     private double kRadiusPath = 0.0; // this updates dynamically
     // deg, keeping this because this dictates when the robot switches
     private final double kAngularErrorPath = 20.0;
@@ -101,7 +102,7 @@ public class CubicSplineFollower {
                 nextWaypoint = true;
 
         if (nextWaypoint) {
-            System.out.println("At Waypoint: " + curWaypoint.toString());
+            System.out.println("At Waypoint: " + curWaypoint.toString()+ ". Reached At "+ Timer.getFPGATimestamp());
             System.out.println("Real Position: X:" + SmartDashboard.getNumber("Center X Pose", 0.0) + 
                                                 " / Y:"+ SmartDashboard.getNumber("Center Y Pose", 0.0) +
                                                 " / Heading:" + SmartDashboard.getNumber("Gyro Heading", 0.0));

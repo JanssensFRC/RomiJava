@@ -11,6 +11,7 @@ import frc.robot.commands.Spots2And3;
 import frc.util.terrorMath;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -27,8 +28,9 @@ public class TerrorAuto extends SequentialCommandGroup {
   // }
         super(
           new InstantCommand(() -> drivetrain.resetEncoders()),
-        new DrivePath(drivetrain, false, ANTICS.START, ANTICS.WAYPOINTSONE).withTimeout(20-Timer.getFPGATimestamp()),
-        new SpinCommand(0.3, 180.0, drivetrain).withTimeout(20-Timer.getFPGATimestamp())
+        new DrivePath(drivetrain, false, ANTICS.START, ANTICS.WAYPOINTSONE),
+        new SpinCommand(0.3, 180.0, drivetrain),
+        new PrintCommand("Finished Autonomous Routine at "+Timer.getFPGATimestamp())
         /*new RunCommand(()->drivetrain.setOpenLoop(0.8, -0.4), drivetrain).withTimeout(1.75)*/);
     }
 

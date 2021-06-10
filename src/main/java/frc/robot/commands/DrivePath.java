@@ -7,6 +7,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.controls.CubicSplineFollower.Waypoint;
@@ -49,6 +50,7 @@ public class DrivePath extends CommandBase {
 
     @Override
     public boolean isFinished() {
+        if (Timer.getFPGATimestamp() > 20) return true;
         return dt.waypointNav.isFinished;
     }
 
