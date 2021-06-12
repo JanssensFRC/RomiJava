@@ -19,6 +19,7 @@ public class DrivePath extends CommandBase {
     private final Drivetrain dt;
     private Pose startPose;
     private Waypoint[] waypoints;
+    private double timekeep;
 
     public DrivePath(Drivetrain drive, Boolean highSpeed, Pose startPose, Waypoint... waypoints) {
         dt = drive;
@@ -36,10 +37,10 @@ public class DrivePath extends CommandBase {
         if (startPose != null) {
             dt.waypointNav.clearWaypoints();
             dt.resetEncoders();
+            dt.resetGyro();
             dt.model.setPosition(startPose);
         }
-        new RunCommand(() -> new PosTrack(dt));
-
+        timekeep = Timer.getFPGATimestamp()+20;
         for (Waypoint waypoint : waypoints) dt.waypointNav.addWaypoint(waypoint);
         dt.startPathFollowing();
     }
@@ -50,7 +51,7 @@ public class DrivePath extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        if (Timer.getFPGATimestamp() > 20) return true;
+        if (Timer.getFPGATimestamp() > timekeep) return true;
         return dt.waypointNav.isFinished;
     }
 

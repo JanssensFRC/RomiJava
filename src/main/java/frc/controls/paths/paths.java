@@ -27,13 +27,15 @@ public class paths {
 
     public static class ANTICS implements PATH_SET{
       public final static Pose START = new Pose(terrorMath.toMeters(0.0),terrorMath.toMeters(0.0), 0.0);
+      private final static double scale = 0.7;
       public static final Waypoint[] WAYPOINTSONE = {
-      new Waypoint(terrorMath.toMeters(0.0), terrorMath.toMeters(12.0), 0.0, 0.7, false),
-      new Waypoint(terrorMath.toMeters(1.0), terrorMath.toMeters(38.0), 5.0, 0.8, false),
-      new Waypoint(terrorMath.toMeters(1.5), terrorMath.toMeters(54.0), 10.0, 0.9, false),
-       new Waypoint(terrorMath.toMeters(2.0), terrorMath.toMeters(70.0), 20.0, 1.0, true),
-       new Waypoint(terrorMath.toMeters(-7.0), terrorMath.toMeters(60.0), 90.0, -0.3, false),
-       new Waypoint(terrorMath.toMeters(-16.5), terrorMath.toMeters(76.5), 145.0, -0.3, true),
+      
+      new Waypoint(terrorMath.toMeters(-0.5), terrorMath.toMeters(12.0), 0.0, 0.7 * scale, false),
+      new Waypoint(terrorMath.toMeters(1.0), terrorMath.toMeters(38.0), 5.0, 0.8 * scale, false),
+      new Waypoint(terrorMath.toMeters(1.5), terrorMath.toMeters(54.0), 10.0, 0.9 * scale, false),
+      new Waypoint(terrorMath.toMeters(1.7), terrorMath.toMeters(72.0), 0.0, 1.0 * scale, true),
+      new Waypoint(terrorMath.toMeters(-7.0), terrorMath.toMeters(60.0), 90.0, -0.3 * scale, false),
+      new Waypoint(terrorMath.toMeters(-17.0), terrorMath.toMeters(79.0), 180.0, -0.3 * scale, true),
         // new Waypoint(terrorMath.toMeters(-15.0), terrorMath.toMeters(80), -45.0, 0.8, false)
       };
 
