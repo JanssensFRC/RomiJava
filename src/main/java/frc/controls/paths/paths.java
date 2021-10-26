@@ -33,9 +33,9 @@ public class paths {
       new Waypoint(terrorMath.toMeters(-0.5), terrorMath.toMeters(12.0), 0.0, 0.7 * scale, false),
       new Waypoint(terrorMath.toMeters(1.0), terrorMath.toMeters(38.0), 5.0, 0.8 * scale, false),
       new Waypoint(terrorMath.toMeters(1.5), terrorMath.toMeters(54.0), 10.0, 0.9 * scale, false),
-      new Waypoint(terrorMath.toMeters(1.7), terrorMath.toMeters(72.0), 0.0, 1.0 * scale, true),
+      new Waypoint(terrorMath.toMeters(1.3), terrorMath.toMeters(73.0), 0.0, 1.0 * scale, true),
       new Waypoint(terrorMath.toMeters(-7.0), terrorMath.toMeters(60.0), 90.0, -0.3 * scale, false),
-      new Waypoint(terrorMath.toMeters(-17.0), terrorMath.toMeters(79.0), 180.0, -0.3 * scale, true),
+      new Waypoint(terrorMath.toMeters(-18.0), terrorMath.toMeters(79.0), 180.0, -0.3 * scale, true),
         // new Waypoint(terrorMath.toMeters(-15.0), terrorMath.toMeters(80), -45.0, 0.8, false)
       };
 
